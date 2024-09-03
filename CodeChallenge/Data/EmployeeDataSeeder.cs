@@ -16,6 +16,7 @@ namespace CodeChallenge.Data
         public EmployeeDataSeeder(EmployeeContext employeeContext)
         {
             _employeeContext = employeeContext;
+
         }
 
         public async Task Seed()
