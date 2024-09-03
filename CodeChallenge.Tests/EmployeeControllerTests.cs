@@ -18,6 +18,8 @@ namespace CodeCodeChallenge.Tests.Integration
     {
         private static HttpClient _httpClient;
         private static TestServer _testServer;
+        public static bool updatedEmployee = false;
+
 
         [ClassInitialize]
         // Attribute ClassInitialize requires this signature
@@ -109,6 +111,7 @@ namespace CodeCodeChallenge.Tests.Integration
 
             Assert.AreEqual(employee.FirstName, newEmployee.FirstName);
             Assert.AreEqual(employee.LastName, newEmployee.LastName);
+            updatedEmployee = true;
         }
 
         [TestMethod]
@@ -150,7 +153,15 @@ namespace CodeCodeChallenge.Tests.Integration
             var reportingStructure = response.DeserializeContent<ReportingStructure>();
             Assert.IsNotNull(reportingStructure);
             //Interesting Situation where depending on the test order this value may be incorrect and show up as a failure due to the fact that if the updateEmployee test is called first Ringo Starr gets removed from the list effectively making John Lennons Direct Reports = 1
-            //Assert.IsTrue(reportingStructure.numberOfReports == 4);
+            //added a quick check, but this could be removed depending on the situation/testing requirements
+            if (updatedEmployee)
+            {
+                Assert.AreEqual(reportingStructure.numberOfReports, 1);
+            }
+            else
+            {
+                Assert.AreEqual(reportingStructure.numberOfReports, 4);
+            }
         }
 
         //New Test Method to test CreateCompensation
